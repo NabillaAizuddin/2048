@@ -32,6 +32,7 @@ function setGame() {
       document.getElementById("board").append(tile);
     }
   }
+
   setTwo();
   setTwo();
 }
@@ -60,7 +61,7 @@ document.addEventListener("keyup", (e) => {
   } else if (e.code == "ArrowUp") {
     slideUp();
     setTwo();
-  } else {
+  } else if (e.code == "ArrowDown") {
     slideDown();
     setTwo();
   }
@@ -76,11 +77,11 @@ function slide(row) {
   row = filterZero(row); //get rid of zero [2, 2, 2]
 
   //slide
-  for (let i = 0; i < row.length; i++) {
+  for (let i = 0; i < row.length - 1; i++) {
     //check every 2
-    if (row[i] == row[i + i]) {
+    if (row[i] == row[i + 1]) {
       row[i] *= 2;
-      row[i + i] = 0;
+      row[i + 1] = 0;
       score += row[i];
     } //[2, 2, 2,] => [4, 0, 2]
   }
@@ -114,8 +115,7 @@ function slideRight() {
     let row = board[r];
     row.reverse();
     row = slide(row);
-    row.reverse();
-    board[r] = row;
+    board[r] = row.reverse();
 
     for (let c = 0; c < columns; c++) {
       let tile = document.getElementById(r.toString() + "-" + c.toString());
@@ -133,7 +133,7 @@ function slideUp() {
     // board[1][c] = row[1];
     // board[2][c] = row[2];
     // board[3][c] = row[3];
-
+    row = slide(row);
     for (let r = 0; r < rows; r++) {
       board[r][c] = row[r];
       let tile = document.getElementById(r.toString() + "-" + c.toString());
@@ -185,6 +185,7 @@ function setTwo() {
 }
 
 function hasEmptyTile() {
+  let count = 0;
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < columns; c++) {
       if (board[r][c] == 0) {
